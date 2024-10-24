@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Starting Simulator!\n");
+            Console.WriteLine("Starting Simulator\n");
         }
     }
 }
