@@ -4,9 +4,10 @@
     {
         private string _name = "Unknown";
         private int _level = 1;
-        public string Name {
+        public string Name
+        {
             get => _name;
-            init 
+            init
             {
                 _name = value.Trim();
                 if (_name.Length <= 3)
@@ -21,7 +22,7 @@
                     _name = char.ToUpper(_name[0]) + _name.Substring(1);
             }
         }
-        public int Level 
+        public int Level
         {
             get => _level;
             init
@@ -29,7 +30,7 @@
                 _level = value;
                 if (_level < 1) { _level = 1; }
                 if (_level > 10) { _level = 10; }
-                    
+
             }
         }
         public Creature(string name, int level = 1)
@@ -50,6 +51,24 @@
             if (_level < 10)
                 _level++;
         }
+        public void Go(Direction direction)
+        {
+            string directionName = direction.ToString().ToLower();
+            Console.WriteLine($"{Name} goes {directionName}.");
+        }
 
+        public void Go(Direction[] directions)
+        {
+            foreach (Direction direction in directions)
+            {
+                Go(direction);
+            }
+        }
+
+        public void Go(string directions)
+        {
+            Direction[] parsedDirections = DirectionParser.Parse(directions);
+            Go(parsedDirections);
+        }
     }
 }
