@@ -7,31 +7,13 @@
         public string Name
         {
             get => _name;
-            init
-            {
-                _name = value.Trim();
-                if (_name.Length <= 3)
-                    _name = _name.PadRight(3, '#');
-                if (_name.Length >= 25)
-                {
-                    _name = _name.Substring(0, 25).Trim();
-                    if (_name.Length <= 3)
-                        _name = _name.PadRight(3, '#');
-                }
-                if (char.IsLower(_name[0]))
-                    _name = char.ToUpper(_name[0]) + _name.Substring(1);
-            }
+            init => _name = Validator.Shortener(value, 3, 15, '#');
+
         }
         public int Level
         {
             get => _level;
-            init
-            {
-                _level = value;
-                if (_level < 1) { _level = 1; }
-                if (_level > 10) { _level = 10; }
-
-            }
+            init => _level = Validator.Limiter(value, 1, 10);
         }
         public abstract int Power { get; }
         public Creature(string name, int level = 1)
@@ -42,7 +24,11 @@
         public Creature() { }
         public abstract void SayHi();
 
-        public string Info => $"{Name} [{Level}]";
+        public abstract string Info { get; }
+        public override string ToString()
+        {
+            return $"{GetType().Name.ToUpper()}: {Info}";
+        }
 
         public void Upgrade()
         {

@@ -7,6 +7,12 @@
             Console.WriteLine("Starting Simulator\n");
             Console.WriteLine("\n\n");
             Lab4a();
+            Console.WriteLine("\n\n");
+            Creature c = new Elf("Elandor", 5, 3);
+            Console.WriteLine(c);  
+            Console.WriteLine("\n\n");
+            Lab4b();
+
         }
         static void Lab4a()
         {
@@ -39,6 +45,17 @@
             {
                 Console.WriteLine($"{creature.Name,-15}: {creature.Power}");
             }
+        }
+        static void Lab4b()
+        {
+            object[] myObjects = {
+        new Animals() { Description = "dogs"},
+        new Birds { Description = "  eagles ", Size = 10 },
+        new Elf("e", 15, -3),
+        new Orc("morgash", 6, 4)
+    };
+            Console.WriteLine("\nMy objects:");
+            foreach (var o in myObjects) Console.WriteLine(o);
         }
     }
 }

@@ -8,21 +8,15 @@ namespace Simulator
         public int Agility
         {
             get => _agility;
-            init
-            {
-                _agility = value;
-                if (_agility < 1) { _agility = 1; }
-                if (_agility > 10) { _agility = 10; }
-
-            }
+            init => _agility = Validator.Limiter(value, 0, 10);
         }
-        private int _counter = 0;
+        private int _singCounter = 0;
 
         public void Sing()
         {
-            _counter++;
+            _singCounter++;
             Console.WriteLine($"{Name} is singing.");
-            if (_counter % 3 == 0 && _agility < 10)
+            if (_singCounter % 3 == 0 && _agility < 10)
             {
                 _agility++;
                 Console.WriteLine($"Agility up (now it equals {_agility})");
@@ -35,5 +29,6 @@ namespace Simulator
         public Elf() { }
         public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}, my agility is {Agility}.");
         public override int Power => (8* Level)+(2*Agility);
+        public override string Info => $"{Name} [{Level}][{Agility}]";
     }
 }

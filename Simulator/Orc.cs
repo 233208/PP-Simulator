@@ -6,20 +6,14 @@
         public int Rage
         {
             get => _rage;
-            init
-            {
-                _rage = value;
-                if (_rage < 1) { _rage = 1; }
-                if (_rage > 10) { _rage = 10; }
-
-            }
+            init => _rage = Validator.Limiter(value, 0, 10);
         }
-        private int _counter = 0;
+        private int _huntCounter = 0;
         public void Hunt()
         {
-            _counter++;
+            _huntCounter++;
             Console.WriteLine($"{Name} is hunting.");
-            if (_counter % 2 == 0 && _rage < 10)
+            if (_huntCounter % 2 == 0 && _rage < 10)
             {
                 _rage++;
                 Console.WriteLine($"Rage up (now it equals {_rage})");
@@ -32,5 +26,6 @@
         public Orc() { }
         public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}, my rage is {Rage}.");
         public override int Power => (7 * Level) + (3 * Rage);
+        public override string Info => $"{Name} [{Level}][{Rage}]";
     }
 }
