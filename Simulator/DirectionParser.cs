@@ -27,4 +27,5 @@ public static class DirectionParser
 
         return directions.ToArray();
     }
+
 }

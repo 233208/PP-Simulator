@@ -5,57 +5,64 @@
         static void Main(string[] args)
         {
             Console.WriteLine("Starting Simulator\n");
-            Console.WriteLine("\n\n");
-            Lab4a();
-            Console.WriteLine("\n\n");
-            Creature c = new Elf("Elandor", 5, 3);
-            Console.WriteLine(c);  
-            Console.WriteLine("\n\n");
-            Lab4b();
 
+            Lab5a();
         }
-        static void Lab4a()
+        public static void Lab5a()
         {
-            Console.WriteLine("HUNT TEST\n");
-            var o = new Orc() { Name = "Gorbag", Rage = 7 };
-            o.SayHi();
-            for (int i = 0; i < 10; i++)
+            try
             {
-                o.Hunt();
-                o.SayHi();
+                Rectangle rect1 = new Rectangle(2, 3, 5, 8);
+                Console.WriteLine("Utworzony prostokąt rect1: " + rect1);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Błąd przy tworzeniu prostokąta rect1: " + ex.Message);
             }
 
-            Console.WriteLine("\nSING TEST\n");
-            var e = new Elf("Legolas", agility: 2);
-            e.SayHi();
-            for (int i = 0; i < 10; i++)
+            // Test z współrzędnymi w złej kolejności
+            try
             {
-                e.Sing();
-                e.SayHi();
+                Rectangle rect2 = new Rectangle(5, 8, 2, 3);
+                Console.WriteLine("Utworzony prostokąt rect2 z przestawionymi współrzędnymi: " + rect2);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Błąd przy tworzeniu prostokąta rect2: " + ex.Message);
             }
 
-            Console.WriteLine("\nPOWER TEST\n");
-            Creature[] creatures = {
-        o,
-        e,
-        new Orc("Morgash", 3, 8),
-        new Elf("Elandor", 5, 3)
-    };
-            foreach (Creature creature in creatures)
+            // Test tworzenia prostokąta za pomocą punktów
+            try
             {
-                Console.WriteLine($"{creature.Name,-15}: {creature.Power}");
+                Point p1 = new Point(1, 1);
+                Point p2 = new Point(4, 6);
+                Rectangle rect3 = new Rectangle(p1, p2);
+                Console.WriteLine("Utworzony prostokąt rect3 z punktów: " + rect3);
             }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Błąd przy tworzeniu prostokąta rect3: " + ex.Message);
+            }
+
+            // Test na współliniowe punkty
+            try
+            {
+                Rectangle rect4 = new Rectangle(1, 1, 1, 5);
+                Console.WriteLine("Utworzony prostokąt rect4: " + rect4);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine("Błąd przy tworzeniu prostokąta rect4: " + ex.Message);
+            }
+
+            // Test sprawdzania zawierania punktów
+            Rectangle rect6 = new Rectangle(2, 3, 5, 8);
+            Point insidePoint = new Point(3, 4);
+            Point outsidePoint = new Point(6, 9);
+            Console.WriteLine($"Punkt {insidePoint} jest w prostokącie rect6: {rect6.Contains(insidePoint)}");
+            Console.WriteLine($"Punkt {outsidePoint} jest w prostokącie rect5: {rect6.Contains(outsidePoint)}");
         }
-        static void Lab4b()
-        {
-            object[] myObjects = {
-        new Animals() { Description = "dogs"},
-        new Birds { Description = "  eagles ", Size = 10 },
-        new Elf("e", 15, -3),
-        new Orc("morgash", 6, 4)
-    };
-            Console.WriteLine("\nMy objects:");
-            foreach (var o in myObjects) Console.WriteLine(o);
-        }
+
+
     }
 }
