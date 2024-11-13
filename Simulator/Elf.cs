@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System;
+using System.Diagnostics.Metrics;
 
 namespace Simulator
 {
@@ -15,11 +16,9 @@ namespace Simulator
         public void Sing()
         {
             _singCounter++;
-            Console.WriteLine($"{Name} is singing.");
             if (_singCounter % 3 == 0 && _agility < 10)
             {
                 _agility++;
-                Console.WriteLine($"Agility up (now it equals {_agility})");
             }
         }
         public Elf(string name, int level = 1, int agility = 1) : base(name, level)
@@ -27,7 +26,7 @@ namespace Simulator
             Agility = agility;
         }
         public Elf() { }
-        public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}, my agility is {Agility}.");
+        public override string Greeting() => $"Hi, I'm {Name}, my level is {Level}, my agility is {Agility}.";
         public override int Power => (8* Level)+(2*Agility);
         public override string Info => $"{Name} [{Level}][{Agility}]";
     }

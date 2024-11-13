@@ -22,7 +22,7 @@
             Level = level;
         }
         public Creature() { }
-        public abstract void SayHi();
+        public abstract string Greeting();
 
         public abstract string Info { get; }
         public override string ToString()
@@ -35,25 +35,20 @@
             if (_level < 10)
                 _level++;
         }
-        public void Go(Direction direction)
-        {
-            string directionName = direction.ToString().ToLower();
-            Console.WriteLine($"{Name} goes {directionName}.");
-        }
+        public string Go(Direction direction) => $"{direction.ToString().ToLower()}";
+           
 
-        public void Go(Direction[] directions)
+        public string[] Go(Direction[] directions)
         {
-            foreach (Direction direction in directions)
+            string[] result = new string[directions.Length];
+            for (int i = 0; i < result.Length; i++)
             {
-                Go(direction);
+                result[i] = Go(directions[i]);
             }
+            return result ;
+               
         }
 
-        public void Go(string directions)
-        {
-            Direction[] parsedDirections = DirectionParser.Parse(directions);
-            Go(parsedDirections);
-        }
-
+        public string[] Go(string directions) => Go(DirectionParser.Parse(directions));
     }
 }
