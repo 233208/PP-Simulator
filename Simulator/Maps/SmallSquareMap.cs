@@ -29,31 +29,18 @@
 
         public override Point Next(Point p, Direction d)
         {
-            Point nextPoint = d switch
-            {
-                Direction.Up => new Point(p.X, p.Y + 1),
-                Direction.Down => new Point(p.X, p.Y - 1),
-                Direction.Left => new Point(p.X - 1, p.Y),
-                Direction.Right => new Point(p.X + 1, p.Y),
-                _ => p
-            };
-            return Exist(nextPoint) ? nextPoint : p;
+            var nextPoint = p.Next(d);
+            if (!Exist(nextPoint)) return p;
+            return nextPoint;
         }
 
 
         public override Point NextDiagonal(Point p, Direction d)
         {
-            Point nextDiagonalPoint = d switch
-            {
-                Direction.Up => new Point(p.X + 1, p.Y + 1),       
-                Direction.Down => new Point(p.X - 1, p.Y + 1),     
-                Direction.Left => new Point(p.X - 1, p.Y + 1),     
-                Direction.Right => new Point(p.X + 1, p.Y - 1),    
-                _ => p
-            };
-            return Exist(nextDiagonalPoint) ? nextDiagonalPoint : p;
-
-    }
+            var nextDiagonal = p.NextDiagonal(d);
+            if (!Exist(nextDiagonal)) return p;
+            return nextDiagonal;
+        }
         public override string ToString() => $"Utworzono mapę o rozmiarze: {Size}";
     }
 }
