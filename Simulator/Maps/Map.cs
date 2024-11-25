@@ -10,7 +10,7 @@
         public Map(int sizeX, int sizeY) 
         {
             if (sizeX < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow");
-            if (sizeY < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too short");
+            if (sizeY < 5) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too short");
             SizeX = sizeX;
             SizeY = sizeY;
         }
@@ -35,6 +35,17 @@
         /// <param name="p">Starting point.</param>
         /// <param name="d">Direction.</param>
         /// <returns>Next point.</returns>
+        public abstract void Add(Creature creature, Point p);
+
+        public abstract void Remove(Creature creature, Point p);
+
+        public void Move(Creature creature, Point from, Point to)
+        {
+            Remove(creature, from);
+            Add(creature, to);
+        }
+        public abstract List<Creature>? At(Point p);
+        public abstract List<Creature>? At(int x, int y);
         public abstract Point NextDiagonal(Point p, Direction d);
         public override string ToString() => $"{GetType().Name}: {Exist}, {Next}, {NextDiagonal}";
     }

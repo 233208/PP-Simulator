@@ -1,9 +1,15 @@
-﻿namespace Simulator
+﻿using Simulator.Maps;
+
+namespace Simulator
 {
     public abstract class Creature
     {
         private string _name = "Unknown";
         private int _level = 1;
+
+        public Map? Map { get; private set; }
+        public Point Position { get; private set; }
+
         public string Name
         {
             get => _name;
@@ -35,20 +41,22 @@
             if (_level < 10)
                 _level++;
         }
-        public string Go(Direction direction) => $"{direction.ToString().ToLower()}";
-           
-
-        public string[] Go(Direction[] directions)
+        public void Go(Direction direction)
         {
-            string[] result = new string[directions.Length];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Go(directions[i]);
-            }
-            return result ;
-               
+            if (Map == null) throw new InvalidOperationException("Map does not exist.");
+            Point to = Map.Next(Position, direction);
+            Map.Move(this, Position, to);
+            Position = to;
+        }
+        public void InitMapAndPosition(Map map, Point position)
+        {
+            Map = map;
+            Position = position;
+            if (Map != null) throw new InvalidOperationException("Map already exists.");
+            Map = map.Exist(position) ? map : throw new InvalidOperationException("Position not on the map.");
+            Map.Add(this, position);
         }
 
-        public string[] Go(string directions) => Go(DirectionParser.Parse(directions));
+
     }
 }
