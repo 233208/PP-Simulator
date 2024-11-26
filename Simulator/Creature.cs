@@ -50,13 +50,13 @@ namespace Simulator
         }
         public void InitMapAndPosition(Map map, Point position)
         {
+            if (Map != null) throw new InvalidOperationException("Map already exists.");
             Map = map;
             Position = position;
-            if (Map != null) throw new InvalidOperationException("Map already exists.");
             Map = map.Exist(position) ? map : throw new InvalidOperationException("Position not on the map.");
             Map.Add(this, position);
         }
-
+        public abstract char MapSymbol { get; }
 
     }
 }
