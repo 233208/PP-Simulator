@@ -35,17 +35,17 @@
         /// <param name="p">Starting point.</param>
         /// <param name="d">Direction.</param>
         /// <returns>Next point.</returns>
-        public abstract void Add(Creature creature, Point p);
+        public abstract void Add(IMappable mappable, Point p);
 
-        public abstract void Remove(Creature creature, Point p);
+        public abstract void Remove(IMappable mappable, Point p);
 
-        public void Move(Creature creature, Point from, Point to)
+        public void Move(IMappable mappable, Point from, Point to)
         {
-            Remove(creature, from);
-            Add(creature, to);
+            Remove(mappable, from);
+            Add(mappable, to);
         }
-        public abstract List<Creature>? At(Point p);
-        public abstract List<Creature>? At(int x, int y);
+        public abstract List<IMappable>? At(Point p);
+        public abstract List<IMappable>? At(int x, int y);
         public abstract Point NextDiagonal(Point p, Direction d);
         public override string ToString() => $"{GetType().Name}: {Exist}, {Next}, {NextDiagonal}";
     }

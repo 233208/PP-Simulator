@@ -4,7 +4,7 @@ using Simulator;
 public class Simulation
 {
     private readonly List<Direction> _directions;
-    private int _currentCreature;
+    private int _currentMappable;
     private int _currentDirection;
     /// <summary>
     /// Simulation's map.
@@ -12,21 +12,21 @@ public class Simulation
     public Map Map { get; }
 
     /// <summary>
-    /// Creatures moving on the map.
+    /// IMappables moving on the map.
     /// </summary>
-    public List<Creature> Creatures { get; }
+    public List<IMappable> Mappables { get; }
 
     /// <summary>
-    /// Starting positions of creatures.
+    /// Starting positions of mappables.
     /// </summary>
     public List<Point> Positions { get; }
 
     /// <summary>
-    /// Cyclic list of creatures moves. 
+    /// Cyclic list of mappables moves. 
     /// Bad moves are ignored - use DirectionParser.
-    /// First move is for first creature, second for second and so on.
-    /// When all creatures make moves, 
-    /// next move is again for first creature and so on.
+    /// First move is for first mappable, second for second and so on.
+    /// When all mappables make moves, 
+    /// next move is again for first mappable and so on.
     /// </summary>
     public string Moves { get; }
 
@@ -36,9 +36,9 @@ public class Simulation
     public bool Finished = false;
 
     /// <summary>
-    /// Creature which will be moving current turn.
+    /// IMappable which will be moving current turn.
     /// </summary>
-    public Creature CurrentCreature => Creatures[_currentCreature];
+    public IMappable CurrentIMappable => Mappables[_currentMappable];
 
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
@@ -48,26 +48,26 @@ public class Simulation
     /// <summary>
     /// Simulation constructor.
     /// Throw errors:
-    /// if creatures' list is empty,
-    /// if number of creatures differs from 
+    /// if mappables' list is empty,
+    /// if number of mappables differs from 
     /// number of starting positions.
     /// </summary>
-    public Simulation(Map map, List<Creature> creatures, List<Point> positions, string moves)
+    public Simulation(Map map, List<IMappable> mappables, List<Point> positions, string moves)
     {
         Map = map ?? throw new ArgumentNullException(nameof(map));
 
-        if (creatures == null || creatures.Count == 0)
-            throw new ArgumentException("At least one creature must be placed on the map.", nameof(creatures));
+        if (mappables == null || mappables.Count == 0)
+            throw new ArgumentException("At least one mappable must be placed on the map.", nameof(mappables));
 
-        if (positions == null || positions.Count != creatures.Count)
+        if (positions == null || positions.Count != mappables.Count)
             throw new ArgumentException("Invalid number of starting positions provided.", nameof(positions));
 
-        Creatures = creatures;
+        Mappables = mappables;
         Positions = positions;
 
-        for (int i = 0; i < creatures.Count; ++i)
+        for (int i = 0; i < mappables.Count; ++i)
         {
-            Creatures[i].InitMapAndPosition(map, positions[i]);
+            Mappables[i].InitMapAndPosition(map, positions[i]);
         }
 
         Moves = moves ?? throw new ArgumentNullException(nameof(moves));
@@ -78,7 +78,7 @@ public class Simulation
 
 
     /// <summary>
-    /// Makes one move of current creature in current direction.
+    /// Makes one move of current mappable in current direction.
     /// Throw error if simulation is finished.
     /// </summary>
     public void Turn()
@@ -87,9 +87,9 @@ public class Simulation
             throw new InvalidOperationException("Cannot execute a turn on a completed simulation.");
 
         var direction = _directions[_currentDirection];
-        CurrentCreature.Go(direction);
+        CurrentIMappable.Go(direction);
 
-        _currentCreature = (_currentCreature + 1) % Creatures.Count;
+        _currentMappable = (_currentMappable + 1) % Mappables.Count;
         _currentDirection++;
 
         if (_currentDirection >= _directions.Count)

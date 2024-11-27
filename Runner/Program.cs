@@ -11,7 +11,7 @@ namespace Simulator
             Console.WriteLine("Starting Simulator\n");
 
             SmallSquareMap map = new SmallSquareMap(5);
-            List<Creature> creatures = new List<Creature>
+            List<IMappable> mappables = new List<IMappable>
             {
                 new Orc("Gorbag"),
                 new Elf("Elandor")
@@ -23,7 +23,7 @@ namespace Simulator
             };
             string moves = "dlrludludrrlrrruduuuuuuuu";
 
-            Simulation simulation = new Simulation(map, creatures, points, moves);
+            Simulation simulation = new Simulation(map, mappables, points, moves);
             MapVisualizer mapVisualizer = new MapVisualizer(simulation.Map);
 
             Console.WriteLine("\nStarting positions:");
@@ -36,7 +36,7 @@ namespace Simulator
                 Console.ReadKey();
 
                 Console.WriteLine($"\nTurn {turnNumber++}");
-                Console.WriteLine($"{simulation.CurrentCreature} goes {simulation.CurrentMoveName}:");
+                Console.WriteLine($"{simulation.CurrentIMappable} goes {simulation.CurrentMoveName}:");
 
                 simulation.Turn();
                 mapVisualizer.Draw();
