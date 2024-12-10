@@ -10,7 +10,7 @@ namespace Simulator
         {
             Console.WriteLine("Starting Simulator\n");
 
-            SmallTorusMap torusMap = new(8, 6);
+            BigBounceMap map = new BigBounceMap(8, 6);
             List<IMappable> mappables = new List<IMappable>
             {
                 new Orc("Gorbag"),
@@ -27,10 +27,10 @@ namespace Simulator
                new Point(5, 5),
                new Point(1, 1)
             };
-            string moves = "dlrludludrrlrrruduuuuuuuu";
+            string moves = "druldldrulrluuurrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
 
-            Simulation simulation = new Simulation(torusMap, mappables, points, moves);
-            MapVisualizer mapVisualizer = new MapVisualizer(simulation.Map);
+            Simulation simulation = new Simulation(map, mappables, points, moves);
+            MapVisualizer mapVisualizer = new MapVisualizer(map);
 
             Console.WriteLine("\nStarting positions:");
             mapVisualizer.Draw();
@@ -49,6 +49,7 @@ namespace Simulator
             }
 
             Console.WriteLine("End of simulation!");
+
         }
 
     }
