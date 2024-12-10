@@ -1,11 +1,17 @@
-﻿namespace Simulator
+﻿using Simulator.Maps;
+using Simulator;
+using System.Drawing;
+
+public class Birds : Animals
 {
-    public class Birds : Animals
+    public override char MapSymbol => CanFly ? 'B' : 'b';
+    public bool CanFly { get; set; } = true;
+
+    public override string Info
     {
-        private bool _canFly = true;
-        public override string Info
-        {
-            get => $"{Description}  ({(_canFly ? "fly+" : "fly-")}) <{Size}>";
-        }
+        get => $"{Description} ({(CanFly ? "fly+" : "fly-")}) <{Size}>";
     }
+    protected override Point GetNewPosition(Direction direction) => CanFly
+            ? Map.Next(Map.Next(Position, direction), direction)
+            : Map.NextDiagonal(Position, direction);
 }

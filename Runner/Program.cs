@@ -10,20 +10,26 @@ namespace Simulator
         {
             Console.WriteLine("Starting Simulator\n");
 
-            SmallSquareMap map = new SmallSquareMap(5);
+            SmallTorusMap torusMap = new(8, 6);
             List<IMappable> mappables = new List<IMappable>
             {
                 new Orc("Gorbag"),
-                new Elf("Elandor")
+                new Elf("Elandor"),
+                new Animals { Description = "Rabbits" , Size = 7},
+                new Birds { Description = "Eagle", Size = 5, CanFly = true },
+                new Birds { Description = "Ostriches", Size = 5, CanFly = false }
             };
             List<Point> points = new List<Point>
             {
-                new Point(2, 2),
-                new Point(3, 1)
+               new Point(2, 3),
+               new Point(3, 1),
+               new Point(2, 1),
+               new Point(5, 5),
+               new Point(1, 1)
             };
             string moves = "dlrludludrrlrrruduuuuuuuu";
 
-            Simulation simulation = new Simulation(map, mappables, points, moves);
+            Simulation simulation = new Simulation(torusMap, mappables, points, moves);
             MapVisualizer mapVisualizer = new MapVisualizer(simulation.Map);
 
             Console.WriteLine("\nStarting positions:");
