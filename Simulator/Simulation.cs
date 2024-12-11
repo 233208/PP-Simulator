@@ -1,34 +1,37 @@
 ﻿using Simulator.Maps;
-using Simulator;
+
+namespace Simulator;
 
 public class Simulation
 {
-    private readonly List<Direction> _directions;
-    private int _currentMappable;
-    private int _currentDirection;
     /// <summary>
-    /// Simulation's map.
+    /// The simulation's map.
     /// </summary>
     public Map Map { get; }
 
     /// <summary>
-    /// IMappables moving on the map.
+    /// The list of mappables moving on the map.
     /// </summary>
     public List<IMappable> Mappables { get; }
 
     /// <summary>
-    /// Starting positions of mappables.
+    /// The starting positions of mappables.
     /// </summary>
     public List<Point> Positions { get; }
 
     /// <summary>
-    /// Cyclic list of mappables moves. 
-    /// Bad moves are ignored - use DirectionParser.
-    /// First move is for first mappable, second for second and so on.
-    /// When all mappables make moves, 
-    /// next move is again for first mappable and so on.
+    /// Cyclic list of mappables' moves.
+    /// Invalid moves are ignored - use DirectionParser.
+    /// The first move is for the first mappable, the second for the second, and so on.
+    /// When all mappables make their moves,
+    /// the next move is again for the first mappable, and so on.
     /// </summary>
     public string Moves { get; }
+
+    /// <summary>
+    /// The list of directions.
+    /// </summary>
+    private List<Direction> ParsedMoves { get; }
 
     /// <summary>
     /// Has all moves been done?
@@ -36,21 +39,35 @@ public class Simulation
     public bool Finished = false;
 
     /// <summary>
-    /// IMappable which will be moving current turn.
+    /// Current turn counter.
     /// </summary>
-    public IMappable CurrentIMappable => Mappables[_currentMappable];
+    private int _currentTurn = 0;
 
     /// <summary>
-    /// Lowercase name of direction which will be used in current turn.
+    /// Valid moves characters.
     /// </summary>
-    public string CurrentMoveName => _directions[_currentDirection].ToString().ToLower();
+    private readonly HashSet<char> _validMoves = new HashSet<char> { 'l', 'r', 'u', 'd' };
+
+    /// <summary>
+    /// The IMappable that will be moving in the current turn.
+    /// </summary>
+    public IMappable CurrentMappable => Mappables[_currentTurn % Mappables.Count];
+
+    /// <summary>
+    /// Lowercase name of the direction that will be used in the current turn.
+    /// </summary>
+    public string CurrentMoveName => ParsedMoves[_currentTurn % ParsedMoves.Count].ToString().ToLower();
+
+    /// <summary>
+    /// Helps to store simulation history.
+    /// </summary>
+    public SimulationHistory History { get; }
 
     /// <summary>
     /// Simulation constructor.
-    /// Throw errors:
-    /// if mappables' list is empty,
-    /// if number of mappables differs from 
-    /// number of starting positions.
+    /// Throws exceptions if the mappables' list is empty,
+    /// or if the number of mappables differs from
+    /// the number of starting positions.
     /// </summary>
     public Simulation(Map map, List<IMappable> mappables, List<Point> positions, string moves)
     {
@@ -64,36 +81,64 @@ public class Simulation
 
         Mappables = mappables;
         Positions = positions;
+        Moves = moves ?? throw new ArgumentNullException(nameof(moves));
+        ParsedMoves = ParseMoves(moves);
+        History = new SimulationHistory();
 
-        for (int i = 0; i < mappables.Count; ++i)
+        for (int i = 0; i < mappables.Count; i++)
         {
-            Mappables[i].InitMapAndPosition(map, positions[i]);
+            mappables[i].InitMapAndPosition(map, positions[i]);
         }
 
-        Moves = moves ?? throw new ArgumentNullException(nameof(moves));
-        _directions = DirectionParser.Parse(moves);
-
-        Finished = _directions.Count == 0;
+        // Record initial state
+        History.RecordState(
+            _currentTurn,
+            Mappables.ToDictionary(m => m, m => positions[Mappables.IndexOf(m)]),
+            null,
+            null
+        );
     }
 
-
     /// <summary>
-    /// Makes one move of current mappable in current direction.
-    /// Throw error if simulation is finished.
+    /// Makes one move of the current mappable in the current direction.
+    /// Throws an exception if the simulation is finished.
     /// </summary>
-    public void Turn()
+    public void ExecuteTurn()
     {
         if (Finished)
             throw new InvalidOperationException("Cannot execute a turn on a completed simulation.");
 
-        var direction = _directions[_currentDirection];
-        CurrentIMappable.Go(direction);
+        var direction = ParsedMoves[_currentTurn % ParsedMoves.Count];
+        CurrentMappable.Go(direction);
 
-        _currentMappable = (_currentMappable + 1) % Mappables.Count;
-        _currentDirection++;
+        // Record the turn's state
+        RecordCurrentState(direction);
 
-        if (_currentDirection >= _directions.Count)
-            Finished = true;
+        _currentTurn++;
+        if (_currentTurn >= ParsedMoves.Count) Finished = true;
     }
 
+    /// <summary>
+    /// Records the current state of the simulation in the history.
+    /// </summary>
+    private void RecordCurrentState(Direction direction)
+    {
+        History.RecordState(
+            _currentTurn,
+            Mappables.ToDictionary(m => m, m => m.Position),
+            CurrentMappable,
+            direction
+        );
+    }
+
+    /// <summary>
+    /// Parses the moves input string into a list of directions.
+    /// </summary>
+    private List<Direction> ParseMoves(string moves)
+    {
+        return moves
+            .Where(c => _validMoves.Contains(char.ToLower(c)))
+            .Select(c => DirectionParser.Parse(c.ToString()).FirstOrDefault())
+            .ToList();
+    }
 }
