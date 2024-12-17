@@ -24,24 +24,44 @@ public class SimulationHistory
         Run();
     }
 
+    public string Moves() => _simulation.Moves;
+
+
+    public Map Map() => _simulation.Map;
+
     private void Run()
     {
-        var map = _simulation.Map;
+
+        TurnLogs.Add(new SimulationTurnLog
+        {
+            Mappable = string.Empty,
+            Move = string.Empty,
+            Symbols = _simulation.Mappables
+            .GroupBy(m => m.Position)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Count() > 1 ? 'X' : group.First().MapSymbol
+            )
+        });
+
         while (!_simulation.Finished)
         {
             var currentMappable = _simulation.CurrentIMappable;
             var move = _simulation.CurrentMoveName;
-            var symbols = _simulation.Mappables.ToDictionary(
-                m => m.Position,
-                m => m.MapSymbol
-            );
+
+            _simulation.Turn();
+
             TurnLogs.Add(new SimulationTurnLog
             {
                 Mappable = currentMappable.ToString(),
                 Move = move,
-                Symbols = symbols
+                Symbols = _simulation.Mappables
+                            .GroupBy(m => m.Position)
+                            .ToDictionary(
+                                group => group.Key,
+                                group => group.Count() > 1 ? 'X' : group.First().MapSymbol
+                            )
             });
-            _simulation.Turn();
         }
     }
 }

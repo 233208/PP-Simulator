@@ -1,0 +1,34 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Strona Główna";
+}
+
+<style>
+    .display-4 {
+        font-size: 3.5rem; 
+        font-weight: bold; 
+        margin-bottom: 20px; 
+        color: #28a745; 
+    }
+    h5{
+        margin-bottom: 15px;
+    }
+    .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+        border: 4px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">Aplikacja demonstracyjna Sim Web</h1>
+    <h5>Wizualizacja symulacji z wykorzystaniem programowania obiektowego w C# i Razor Pages.</h5>
+    <h5>Mapa typu bounce.</h5>
+    <h4>Sekwencja ruchów: <strong>@Model.Moves</strong></h4>
+    <img src="~/images/Orc.png" width="700px" alt="Orc" class="centered-image" />
+</div>
