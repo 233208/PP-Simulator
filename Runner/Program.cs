@@ -63,6 +63,9 @@ internal class Program
         {
             Console.WriteLine($"Position: {symbol.Key}, Symbol: {symbol.Value}");
         }
+        var logVisualizer = new LogVisualizer(history);
 
+        Console.WriteLine(logVisualizer.Draw(5));
+        Console.WriteLine(logVisualizer.Draw(2));
     }
 }
