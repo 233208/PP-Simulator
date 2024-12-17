@@ -7,6 +7,7 @@
     {
         public int SizeX { get; }
         public int SizeY { get; }
+        Dictionary<Point, List<IMappable>> _fields = new();
         public Map(int sizeX, int sizeY) 
         {
             if (sizeX < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow");
@@ -35,17 +36,41 @@
         /// <param name="p">Starting point.</param>
         /// <param name="d">Direction.</param>
         /// <returns>Next point.</returns>
-        public abstract void Add(IMappable mappable, Point p);
+        public void Add(IMappable mappable, Point p)
+        {
+            if (!_fields.ContainsKey(p))
+            {
+                _fields[p] = new List<IMappable>();
+            }
+            _fields[p].Add(mappable);
+        }
 
-        public abstract void Remove(IMappable mappable, Point p);
+        public void Remove(IMappable mappable, Point p)
+        {
+            if (_fields.ContainsKey(p))
+            {
+                _fields[p].Remove(mappable);
+                if (_fields[p].Count == 0)
+                {
+                    _fields.Remove(p);
+                }
+            }
+        }
 
         public void Move(IMappable mappable, Point from, Point to)
         {
             Remove(mappable, from);
             Add(mappable, to);
         }
-        public abstract List<IMappable>? At(Point p);
-        public abstract List<IMappable>? At(int x, int y);
+        public  List<IMappable>? At(Point p)
+        {
+            return _fields.ContainsKey(p) ? _fields[p] : null;
+        }
+
+        public  List<IMappable>? At(int x, int y)
+        {
+            return At(new Point(x, y));
+        }
         public abstract Point NextDiagonal(Point p, Direction d);
         public override string ToString() => $"{GetType().Name}: {Exist}, {Next}, {NextDiagonal}";
     }
