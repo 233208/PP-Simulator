@@ -1,60 +1,47 @@
 ﻿using Simulator.Maps;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Simulator;
 
 public class SimulationHistory
 {
-    private readonly List<State> _history = new();
+    public Simulation _simulation { get; }
+    public int SizeX { get; }
+    public int SizeY { get; }
+    public List<SimulationTurnLog> TurnLogs { get; } = [];
+    // store starting positions at index 0
 
-    /// <summary>
-    /// Records the state of the simulation at a specific turn.
-    /// </summary>
-    public void RecordState(int turn, Dictionary<IMappable, Point> positions, IMappable currentMappable, Direction? currentMove)
+    public SimulationHistory(Simulation simulation)
     {
-        var state = new State
-        {
-            Turn = turn,
-            CurrentMappable = currentMappable,
-            CurrentMove = currentMove,
-            Positions = new Dictionary<IMappable, Point>(positions)
-        };
-
-        _history.Add(state);
+        _simulation = simulation ??
+            throw new ArgumentNullException(nameof(simulation));
+        SizeX = _simulation.Map.SizeX;
+        SizeY = _simulation.Map.SizeY;
+        Run();
     }
 
-    /// <summary>
-    /// Displays the state of the simulation at a given turn.
-    /// </summary>
-    public void DisplayState(int turn)
+    private void Run()
     {
-        if (turn < 0 || turn >= _history.Count)
+        var map = _simulation.Map;
+        while (!_simulation.Finished)
         {
-            Console.WriteLine("Invalid turn number.");
-            return;
+            var currentMappable = _simulation.CurrentIMappable;
+            var move = _simulation.CurrentMoveName;
+            var symbols = _simulation.Mappables.ToDictionary(
+                m => m.Position,
+                m => m.MapSymbol
+            );
+            TurnLogs.Add(new SimulationTurnLog
+            {
+                Mappable = currentMappable.ToString(),
+                Move = move,
+                Symbols = symbols
+            });
+            _simulation.Turn();
         }
-
-        var state = _history[turn];
-        Console.WriteLine($"Turn: {turn}");
-
-        if (state.CurrentMappable != null && state.CurrentMove.HasValue)
-        {
-            Console.WriteLine($"{state.CurrentMappable} moved {state.CurrentMove}");
-        }
-
-        foreach (var entry in state.Positions)
-        {
-            Console.WriteLine($"{entry.Key} is at {entry.Value}");
-        }
-    }
-
-    /// <summary>
-    /// Private class to store the state of the simulation at a specific turn.
-    /// </summary>
-    private class State
-    {
-        public int Turn { get; set; }
-        public IMappable? CurrentMappable { get; set; }
-        public Direction? CurrentMove { get; set; }
-        public Dictionary<IMappable, Point> Positions { get; set; } = new();
     }
 }

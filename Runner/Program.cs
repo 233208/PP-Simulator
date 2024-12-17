@@ -7,9 +7,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Starting simulator\n");
 
-        // Initialize map and mappables
         BigBounceMap map = new BigBounceMap(8, 6);
         List<IMappable> mappables = new List<IMappable>
         {
@@ -31,7 +29,7 @@ internal class Program
         };
 
         // Define moves
-        string moves = "uuurrrrurlllrurrruuudlduuuuuu";
+        string moves = "ddddddu";
 
         // Create simulation and visualizer
         Simulation simulation = new Simulation(map, mappables, points, moves);
@@ -40,32 +38,31 @@ internal class Program
         Console.WriteLine("\nStarting positions:");
         mapVisualizer.Draw();
 
-        int turnNumber = 1;
-        while (!simulation.Finished)
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+        int turnNumber = 0;
 
-            Console.WriteLine($"\nTurn {turnNumber++}");
-            Console.WriteLine($"{simulation.CurrentMappable} goes {simulation.CurrentMoveName}:");
+        
+        //    while (!simulation.Finished)
+        //{
+        //    Console.WriteLine("Press any key to continue...");
+        //    Console.ReadKey();
+        
+        //    Console.WriteLine($"\nTurn {turnNumber++}");
+       //     Console.WriteLine($"{simulation.CurrentIMappable} goes {simulation.CurrentMoveName}:");
 
-            simulation.ExecuteTurn();
-            mapVisualizer.Draw();
-        }
+        //    simulation.Turn();
+        //    mapVisualizer.Draw();
+        //}
 
         Console.WriteLine("End of simulation!");
 
-        // Display historical states
-        simulation.History.DisplayState(5);
-        Console.WriteLine();
-        simulation.History.DisplayState(10);
-        Console.WriteLine();
-        simulation.History.DisplayState(15);
-        Console.WriteLine();
-        simulation.History.DisplayState(20);
-        Console.WriteLine();
-        simulation.History.DisplayState(30);
-        Console.WriteLine();
-        simulation.History.DisplayState(40);
+        var history = new SimulationHistory(simulation);
+        var log = history.TurnLogs[5];
+        Console.WriteLine(history._simulation.Moves);
+        Console.WriteLine($"Turn: 5 - {log.Mappable} moved {log.Move}");
+        foreach (var symbol in log.Symbols)
+        {
+            Console.WriteLine($"Position: {symbol.Key}, Symbol: {symbol.Value}");
+        }
+
     }
 }
