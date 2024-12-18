@@ -11,11 +11,14 @@ internal class Program
         BigBounceMap map = new BigBounceMap(8, 6);
         List<IMappable> mappables = new List<IMappable>
         {
-            new Orc("Gorbag"),
-            new Elf("Elandor"),
-            new Animals { Description = "Rabbits", Size = 7 },
-            new Birds { Description = "Eagle", Size = 5, CanFly = true },
-            new Birds { Description = "Ostriches", Size = 5, CanFly = false }
+            new Orc("Gorbag") {Level = 9, Rage = 5 },
+            new Elf("Elandor") {Level = 9, Agility = 5 },
+            new Orc("Alfred") {Level = 9, Rage = 5 },
+            new Elf("Brung") {Level = 9, Agility = 5 },
+            new Orc("Batista") {Level = 9, Rage = 5 },
+            new Elf("Dexter") {Level = 9, Agility = 5 }
+
+
         };
 
         // Set starting positions
@@ -25,7 +28,8 @@ internal class Program
             new Point(3, 1),
             new Point(2, 1),
             new Point(5, 5),
-            new Point(1, 1)
+            new Point(1, 1),
+            new Point(4, 1)
         };
 
         // Define moves

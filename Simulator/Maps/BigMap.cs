@@ -5,11 +5,12 @@ namespace Simulator.Maps
 {
     public abstract class BigMap : Map
     {
-
+        private readonly List<IMappable>?[,] _fields;
         public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
         {
-            if (sizeX > 1000 || sizeY > 1000)
-                throw new ArgumentOutOfRangeException("Map size cannot exceed 1000x1000.");
+            if (sizeX > 1000) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too wide");
+            if (sizeY > 1000) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too high");
+            _fields = new List<IMappable>[sizeX, sizeY];
         }
 
     }

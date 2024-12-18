@@ -5,18 +5,11 @@
     /// </summary>
     public class SmallSquareMap : SmallMap
     {
-        public SmallSquareMap(int size) : base(size, size) { }
-        public override Point Next(Point p, Direction d)
+        public SmallSquareMap(int size) : base(size, size) 
         {
-            var nextPoint = p.Next(d);
-            if (!Exist(nextPoint)) return p;
-            return nextPoint;
+            FNext = MoveRules.WallNext;
+            FNextDiagonal = MoveRules.WallNextDiagonal;
         }
-        public override Point NextDiagonal(Point p, Direction d)
-        {
-            var nextDiagonal = p.NextDiagonal(d);
-            if (!Exist(nextDiagonal)) return p;
-            return nextDiagonal;
-        }
+        
     }
 }

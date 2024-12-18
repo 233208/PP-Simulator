@@ -7,6 +7,11 @@
     {
         public int SizeX { get; }
         public int SizeY { get; }
+
+        protected Func<Map, Point, Direction, Point>? FNext { get; set; }
+        protected Func<Map, Point, Direction, Point>? FNextDiagonal { get; set; }
+
+
         Dictionary<Point, List<IMappable>> _fields = new();
         public Map(int sizeX, int sizeY) 
         {
@@ -27,7 +32,7 @@
         /// <param name="p">Starting point.</param>
         /// <param name="d">Direction.</param>
         /// <returns>Next point.</returns>
-        public abstract Point Next(Point p, Direction d);
+        public Point Next(Point p, Direction d) => FNext?.Invoke(this, p, d) ?? p;
 
         /// <summary>
         /// Next diagonal position to the point in a given direction 
@@ -36,6 +41,9 @@
         /// <param name="p">Starting point.</param>
         /// <param name="d">Direction.</param>
         /// <returns>Next point.</returns>
+        public Point NextDiagonal(Point p, Direction d) => FNextDiagonal?.Invoke(this, p, d) ?? p;
+
+
         public void Add(IMappable mappable, Point p)
         {
             if (!_fields.ContainsKey(p))
@@ -71,7 +79,6 @@
         {
             return At(new Point(x, y));
         }
-        public abstract Point NextDiagonal(Point p, Direction d);
         public override string ToString() => $"{GetType().Name}: {Exist}, {Next}, {NextDiagonal}";
     }
 }

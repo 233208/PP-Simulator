@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Simulator.Maps
 {
-    public class BigTorusMap(int sizeX, int sizeY) : BigMap(sizeX, sizeY)
+    public class BigTorusMap : BigMap
     {
-        public override Point Next(Point p, Direction d)
+        public BigTorusMap(int sizeX, int sizeY) : base(sizeX, sizeY)
         {
-            var nextPoint = p.Next(d);
-            int x = (nextPoint.X + SizeX) % SizeX;
-            int y = (nextPoint.Y + SizeY) % SizeY;
-            return new Point(x, y);
+            FNext = MoveRules.WallNext;
+            FNextDiagonal = MoveRules.WallNextDiagonal;
         }
-        public override Point NextDiagonal(Point p, Direction d)
-        {
-            var nextDiagonal = p.NextDiagonal(d);
-            int x = (nextDiagonal.X + SizeX) % SizeX;
-            int y = (nextDiagonal.Y + SizeY) % SizeY;
-            return new Point(x, y);
-        }
+
     }
 }
